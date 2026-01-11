@@ -1,0 +1,67 @@
+<template>
+    <lightning-card title="Patient Management" icon-name="standard:account">
+        <div class="slds-m-around_medium">
+            <!-- Search Section -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_3-of-4">
+                    <lightning-input
+                        type="search"
+                        label="Search Patients"
+                        value={searchTerm}
+                        onchange={handleSearchChange}
+                        placeholder="Search by name...">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-button
+                        variant="brand"
+                        label="Search"
+                        onclick={handleSearch}
+                        class="slds-m-top_large">
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="slds-m-bottom_medium">
+                <lightning-button
+                    variant="brand"
+                    label="New Patient"
+                    icon-name="utility:add"
+                    onclick={handleNewPatient}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Refresh"
+                    icon-name="utility:refresh"
+                    onclick={handleRefresh}>
+                </lightning-button>
+            </div>
+
+            <!-- Patient Data Table -->
+            <template if:true={hasPatients}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={patients}
+                    columns={columns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <!-- No Data Message -->
+            <template if:false={hasPatients}>
+                <div class="slds-text-align_center slds-m-vertical_large">
+                    <p class="slds-text-heading_small">No patients found</p>
+                </div>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-m-top_medium">
+                    Error loading patients. Please try again.
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
