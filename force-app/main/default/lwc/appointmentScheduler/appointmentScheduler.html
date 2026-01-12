@@ -1,3 +1,131 @@
 <template>
-    
+    <lightning-card title="Appointment Scheduler" icon-name="standard:event">
+        <div class="slds-m-around_medium">
+            <!-- Action Buttons -->
+            <div class="slds-m-bottom_medium">
+                <lightning-button
+                    variant="brand"
+                    label="Schedule New Appointment"
+                    icon-name="utility:add"
+                    onclick={openModal}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Refresh"
+                    icon-name="utility:refresh"
+                    onclick={handleRefresh}>
+                </lightning-button>
+            </div>
+
+            <!-- Upcoming Appointments Table -->
+            <template if:true={hasAppointments}>
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Upcoming Appointments</h3>
+                <lightning-datatable
+                    key-field="Id"
+                    data={appointments}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <!-- No Appointments Message -->
+            <template if:false={hasAppointments}>
+                <div class="slds-text-align_center slds-m-vertical_large">
+                    <p class="slds-text-heading_small">No upcoming appointments</p>
+                    <p class="slds-text-body_regular slds-m-top_small">
+                        Click "Schedule New Appointment" to create one
+                    </p>
+                </div>
+            </template>
+        </div>
+
+        <!-- New Appointment Modal -->
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal Header -->
+                    <header class="slds-modal__header">
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            variant="bare-inverse"
+                            onclick={closeModal}
+                            class="slds-modal__close">
+                        </lightning-button-icon>
+                        <h2 class="slds-text-heading_medium">Schedule New Appointment</h2>
+                    </header>
+
+                    <!-- Modal Body -->
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-combobox
+                            name="patient"
+                            label="Patient"
+                            value={selectedPatientId}
+                            placeholder="Select Patient"
+                            options={patients}
+                            onchange={handlePatientChange}
+                            required>
+                        </lightning-combobox>
+
+                        <lightning-combobox
+                            name="provider"
+                            label="Provider"
+                            value={selectedProviderId}
+                            placeholder="Select Provider"
+                            options={providers}
+                            onchange={handleProviderChange}
+                            required
+                            class="slds-m-top_small">
+                        </lightning-combobox>
+
+                        <lightning-input
+                            type="datetime"
+                            name="appointmentDateTime"
+                            label="Appointment Date & Time"
+                            value={appointmentDateTime}
+                            onchange={handleDateTimeChange}
+                            required
+                            class="slds-m-top_small">
+                        </lightning-input>
+
+                        <lightning-input
+                            type="number"
+                            name="duration"
+                            label="Duration (minutes)"
+                            value={durationMinutes}
+                            onchange={handleDurationChange}
+                            min="15"
+                            max="240"
+                            class="slds-m-top_small">
+                        </lightning-input>
+
+                        <lightning-textarea
+                            name="notes"
+                            label="Notes"
+                            value={notes}
+                            onchange={handleNotesChange}
+                            class="slds-m-top_small">
+                        </lightning-textarea>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            variant="neutral"
+                            label="Cancel"
+                            onclick={closeModal}>
+                        </lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label="Schedule Appointment"
+                            onclick={handleSaveAppointment}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
 </template>
